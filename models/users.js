@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
         as: 'rooms',
         foreignKey: 'user_id'
       });
+      users.hasOne(models.google_users, {
+        foreignKey: 'user_id'
+      });
     }
   };
   users.init({

@@ -3,6 +3,7 @@ const authRouter = express.Router();
 const validatorMiddleware = require('../middlewares/validatorMiddleware');
 const {registerValidation, loginValidation} = require('../validators/validators');
 const base64DecodeMiddleware = require('../middlewares/base64Middleware');
+const passport = require('passport');
 module.exports = authRouter;
 
 
@@ -20,5 +21,12 @@ authRouter.post('/login', base64DecodeMiddleware, loginValidation(), validatorMi
         return res.status(200).json(login);
     }
     return res.status(400).json(login);
+});
 
+authRouter.get('/google', passport.authenticate('google', {
+    scope: ['profile']
+}));
+
+authRouter.get('/google/redirect', passport.authenticate('google'), (req, res) => {
+    res.send("here")
 })

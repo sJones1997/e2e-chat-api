@@ -17,9 +17,7 @@ class HashService {
         const hasher = crypto.createHmac('sha256', process.env.HASH_SECRET);
         const hash = hasher.update(`${password}${salt}`).digest('hex');
 
-        return {
-            hash: hash
-        };
+        return hash;
     }    
 
 }

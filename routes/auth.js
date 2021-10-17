@@ -1,11 +1,24 @@
 const express = require('express');
 const authRouter = express.Router();
 const validatorMiddleware = require('../middlewares/validatorMiddleware');
-const {registerValidation} = require('../validators/validators');
+const {registerValidation, loginValidation} = require('../validators/validators');
+const base64DecodeMiddleware = require('../middlewares/base64Middleware');
 module.exports = authRouter;
 
 
-authRouter.post('/register', registerValidation(), validatorMiddleware, (req, res) => {
-    const register = req.body.authService.register({username: req.body.username, password: req.body.password});
-    res.status(200).json({'message': 'Hello', 'status': 1});
+authRouter.post('/register', base64DecodeMiddleware, registerValidation(), validatorMiddleware, async (req, res) => {
+    const register = await req.body.authService.register({username: req.body.username, password: req.body.password});
+    if(register.status){
+        return res.status(200).json({'message': 'User created', 'status': 1});
+    }
+    return res.status(400).json(register)
+});
+
+authRouter.post('/login', base64DecodeMiddleware, loginValidation(), validatorMiddleware, async (req, res) => {
+    const login = await req.body.authService.login({username: req.body.username, password: req.body.password});
+    if(login.status){
+        return res.status(200).json(login);
+    }
+    return res.status(400).json(login);
+
 })

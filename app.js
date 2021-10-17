@@ -9,7 +9,7 @@ const googleSetup = require('./passport/google');
 app.use(express.json());
 // app.use(express.urlencoded({extend:true}));
 app.use(cors());
-// app.use(cookieParser);
+app.use(cookieParser());
 
 app.use(passport.initialize());
 

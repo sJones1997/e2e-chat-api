@@ -9,7 +9,7 @@ const validateRegistration = (req, res, next) => {
         return e.msg
     })
 
-    return res.status(422).json({'message': response, 'status': 0})
+    return res.status(422).json({'message': response})
 }
 
 module.exports = validateRegistration;

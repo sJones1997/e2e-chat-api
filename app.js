@@ -5,11 +5,11 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const googleSetup = require('./passport/google');
-
+const corsFunc = require('./cors/cors')
 app.use(express.json());
 // app.use(express.urlencoded({extend:true}));
-app.use(cors());
-// app.use(cookieParser);
+app.use(cors(corsFunc));
+app.use(cookieParser());
 
 app.use(passport.initialize());
 

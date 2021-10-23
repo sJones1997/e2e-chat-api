@@ -11,7 +11,7 @@ class AuthService {
     async register(register){
         register.username = register.username.toLowerCase();
         const {hash, salt} = this.hashService.generateHash(register.password);
-        return await this.userService.createUser({username: register.username, password: hash, salt: salt});
+        return await this.userService.createUser(register.username, hash, salt);
     }
 
     async login(login){
@@ -20,7 +20,7 @@ class AuthService {
         if(userDetails.id){
             const hash = this.hashService.getUserHash(login.password, userDetails.salt);
             if(hash === userDetails.password){
-                return {'message': 'Login successful', 'status': 1}
+                return userDetails;
             }
             return {'message': 'Unable to authenticate, please check your details', 'status': 0};            
         }

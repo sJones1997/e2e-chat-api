@@ -7,7 +7,6 @@ const passport = require('passport');
 module.exports = authRouter;
 
 authRouter.post('/register', base64DecodeMiddleware, registerValidation(), validatorMiddleware, async (req, res) => {
-    console.log(req.body)
     const register = await req.body.authService.register({username: req.body.username, password: req.body.password});
     if(register.status){
         const token = req.body.jwtService.generateJWT({userId: register.message.id});
@@ -20,7 +19,7 @@ authRouter.post('/register', base64DecodeMiddleware, registerValidation(), valid
 authRouter.post('/login', base64DecodeMiddleware, loginValidation(), validatorMiddleware, async (req, res) => {
     const login = await req.body.authService.login({username: req.body.username, password: req.body.password});
     if(login.status){
-        const token = req.body.jwtService.generateJWT({userId: login.message.id});      
+        const token = req.body.jwtService.generateJWT({userId: login.message.id});     
         res.cookie('token', token, {httpOnly: true, sameSite:true})          
         return res.status(200).json({'message': 'Sign in successful'});
     }

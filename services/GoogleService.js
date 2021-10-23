@@ -13,7 +13,6 @@ class GoogleService {
             return {message: data.toJSON(), status: 1};
         })
         .catch(err => {
-            console.log(err)
             return {type: err.message, message: err.errors[0].message, status: 0};
         })
     }
@@ -31,7 +30,6 @@ class GoogleService {
             return data;
         })
         .catch(err => {
-            console.log(err.errors)
             return {type: err.message, message: err.errors[0].message, status: 0};
         })              
     }        

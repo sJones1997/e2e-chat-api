@@ -30,7 +30,6 @@ class UserService {
             return {message: data, status: 1};
         })
         .catch(err => {
-            console.log(err)
             return {type: err.message, message: err.errors[0].message, status: 0};
         })        
     }

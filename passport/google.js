@@ -15,7 +15,6 @@ passport.use(new GoogleStrategy({
         const userService = new UserService();
         const googleService = new GoogleService();
         const googleUser = await googleService.getUserByGoogleId(profile.id);
-        console.log(profile)
         if(!googleUser){
             const newUser = await userService.createUser();
             if(newUser.status){

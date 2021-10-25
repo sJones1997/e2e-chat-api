@@ -1,22 +1,45 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
-const passport = require('passport');
-const cookieParser = require('cookie-parser');
-require('dotenv').config();
-const googleSetup = require('./passport/google');
-const corsFunc = require('./cors/cors')
+
 app.use(express.json());
-// app.use(express.urlencoded({extend:true}));
+
+const cors = require('cors');
+const corsFunc = require('./cors/cors')
 app.use(cors(corsFunc));
+
+require('dotenv').config();
+
+const server = require('http').createServer(app);
+
+const io = require("socket.io")(server, {
+    cors: corsFunc,
+    credentials: true
+});
+
+const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const sioCookieParser = require('socket.io-cookie-parser');
+io.use(sioCookieParser())
+
+const passport = require('passport');
+
 app.use(passport.initialize());
+
+const socketMiddleware = require('./middlewares/socketMiddleware');
+const rooms = require('./socket/rooms');
+const message = require('./socket/messages');
+
+io.use(socketMiddleware)
+
+io.on("connection", (socket) => {
+    message(io, socket);
+})
 
 const indexRouter = require('./routes/index');
 app.use('/api', indexRouter);
 
-app.listen(process.env.PORT || 3001, () => {
+server.listen(process.env.PORT || 3001, () => {
     console.log(`Listening on ${process.env.PORT || 3001}`)
 })
 

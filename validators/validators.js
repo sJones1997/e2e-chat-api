@@ -31,7 +31,23 @@ const loginValidation = () => {
     ]
 }
 
+const newRoomValidation = () => {
+    return [
+        body('newRoomName')
+        .isLength({min:3, max:25}).withMessage("Room name must be between 3 and 25 characters long").escape(),
+        body('newRoomLimit')
+        .custom((value, {req}) => {
+            if(!(value >= 2 && value <= 8)){
+                throw new Error("Room member limit must be between 2 and 8")
+            } else {
+                return value
+            }
+        })
+    ]
+}
+
 module.exports = {
     registerValidation,
-    loginValidation
+    loginValidation,
+    newRoomValidation
 };

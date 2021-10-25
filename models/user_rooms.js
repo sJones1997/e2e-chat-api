@@ -14,8 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   user_rooms.init({
+    id: {
+      type:  DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },    
     user_id: DataTypes.INTEGER,
-    room_id: DataTypes.INTEGER
+    room_id: DataTypes.INTEGER,
+    created_at: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'user_rooms',

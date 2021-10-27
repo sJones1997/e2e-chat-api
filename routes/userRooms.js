@@ -3,7 +3,7 @@ const userRoomRouter = express.Router();
 module.exports = userRoomRouter;
 
 userRoomRouter.get('/', async (req, res) => {
-    const userRooms = await req.body.roomService.getUserRooms(req.body.userId);
+    const userRooms = await req.body.userService.getUserRooms(req.body.userId);
     if(userRooms.status){
         return res.status(200).json({"message": userRooms.message})
     }

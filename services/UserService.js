@@ -1,4 +1,6 @@
 const UserModel = require('../models').users;
+const RoomModel = require('../models').rooms;
+const sequelize = require('sequelize');
 
 class UserService { 
 
@@ -33,6 +35,36 @@ class UserService {
             return {type: err.message, message: err.errors[0].message, status: 0};
         })        
     }
+
+    async getUserRooms(userId){
+        return await UserModel.findAll({     
+            attributes: [[sequelize.col("rooms.id"), "roomId"], [sequelize.col("rooms.name"), "name"] ,[sequelize.col("rooms.room_admin"), "roomAdmin"], [sequelize.col("rooms.created_at"), "createdAt"]], 
+            include: [{
+                attributes: [],
+                model: RoomModel,
+                through: {
+                    attributes: []
+                },
+                as: "rooms"
+            }],            
+            where: {
+                id: userId
+            },
+            order: [[sequelize.col("rooms.created_at"), 'DESC']],
+            raw: true
+        })
+        .then(data => {
+            console.log(data)
+            data.map(e => {
+                return e.roomAdmin = e.roomAdmin === userId ? true: false 
+            });            
+            return {message: data, status: 1};
+        })
+        .catch(err => {
+            console.log(err)
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        }) 
+    }     
 }
 
 module.exports = UserService

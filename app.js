@@ -32,8 +32,18 @@ const message = require('./socket/messages');
 
 io.use(socketMiddleware)
 
-io.on("connection", (socket) => {
-    message(io, socket);
+io.on("connection", (socket) => {  
+    socket.on("leave-room", room => {
+        console.log(`${socket.id} ${room} LEFT`)
+        socket.leave(room)
+    })     
+    socket.on("join-room", room => {
+        console.log(`${socket.id} ${room} JOINED`)
+        socket.join(room)
+    })    
+    socket.on("message", (message, room) => {
+        socket.to(room).emit('receive-message', message);
+    })    
 })
 
 const indexRouter = require('./routes/index');

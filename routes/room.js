@@ -14,7 +14,7 @@ roomRouter.post('/', newRoomValidation(), validatorMiddleware, async (req, res) 
             console.log({name: name, limit: limit, roomAdmin: room_admin, createdAt: created_at})
             return res.status(200).json({"message": "Room created", "newRoom": {name: name, limit: limit, roomAdmin: room_admin, createdAt: created_at}});
         }
-        return res.status(400).json({"message": "Unable to add user to room"});
+        return res.status(400).json({"message": addUserToRoom.message});
     }
-    return res.status(400).json({"message": "Unable to create room"});
+    return res.status(400).json({"message": newRoom.message});
 })

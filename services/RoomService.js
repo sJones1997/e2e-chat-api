@@ -21,7 +21,7 @@ class RoomService {
     }
 
     async getRoom(roomId){
-        return await RoomModel.findAll({
+        return await RoomModel.findOne({
             where: {
                 id: roomId
             },
@@ -29,7 +29,10 @@ class RoomService {
             plain: true
         })
         .then(data => {
-            return {message: data, status: 1};
+            if(data){
+                return {message: data, status: 1};
+            }
+            return {message: "This room doesn't exist", status: 0};
         })
         .catch(err => {
             return {type: err.message, message: err.errors[0].message, status: 0};
@@ -53,11 +56,13 @@ class RoomService {
             raw: true
         })
         .then(data => {
-            data.roomCapacity = parseInt(data.roomCapacity);
-            return {message: data, status: 1};
+            if(data){
+                data.roomCapacity = parseInt(data.roomCapacity);
+                return {message: data, status: 1};
+            }
+            return {message: "This room doesn't exist", status: 0}
         })
         .catch(err => {
-            console.log(err)
             return {type: err.message, message: err.message, status: 0};
         })
     }

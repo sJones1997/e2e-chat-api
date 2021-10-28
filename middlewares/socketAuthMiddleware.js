@@ -10,7 +10,6 @@ module.exports = (socket, next) =>{
     } else {
         const err = new Error("What on earth is going on here?");
         err.data = {message: 'Unauthorised, please sign in'}
-        console.log(err)
         next(err)
     }
 

@@ -1,8 +1,6 @@
 
 module.exports = (io, socket) => {
-    socket.on("message", (message, room) => {
-        console.log(message, room)
-        console.log(socket.id)
-        socket.join(room);
-    })
+    socket.on("message", (room, message) => {
+        socket.to(room).emit('receive-message', message);
+    })    
 }

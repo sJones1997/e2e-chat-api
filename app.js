@@ -26,26 +26,15 @@ const passport = require('passport');
 
 app.use(passport.initialize());
 
-const socketMiddleware = require('./middlewares/socketMiddleware');
-const rooms = require('./socket/rooms');
-const message = require('./socket/messages');
+const socketAuthMiddleware = require('./middlewares/socketAuthMiddleware');
+const socketServicesMiddleware = require('./middlewares/socketServicesMiddleware');
 
-io.use(socketMiddleware)
+io.use(socketAuthMiddleware)
+io.use(socketServicesMiddleware);
 
 io.on("connection", (socket) => {     
-    socket.on("join-room", room => {
-        if(socket.lastRoom){
-            socket.leave(socket.lastRoom);
-            socket.lastRoom = null;
-        }
-        socket.join(room)
-        socket.lastRoom = room;
-    })    
-    socket.on("message", (room, cb) => {
-        cb(`Message sent`);
-        socket.to(room).emit('receive-message', message);
-        
-    })    
+    require('./socket/rooms')(io, socket);
+    require('./socket/messages')(io,socket);  
 })
 
 const indexRouter = require('./routes/index');

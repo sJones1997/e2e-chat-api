@@ -19,6 +19,48 @@ class RoomService {
             return {type: err.message, message: err.errors[0].message, status: 0};
         })
     }
+
+    async getRoom(roomId){
+        return await RoomModel.findAll({
+            where: {
+                id: roomId
+            },
+            raw: true,
+            plain: true
+        })
+        .then(data => {
+            return {message: data, status: 1};
+        })
+        .catch(err => {
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        })
+    }
+
+    async getRoomCapacity(roomId){
+        return await RoomModel.findOne({
+            attributes:[[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
+            include:[{
+                model: User,
+                attributes:[],
+                require:true,
+                through: { attributes: []},
+                as: 'user'
+            }],
+            where: {
+                id: roomId
+            },
+            group:['rooms.id'],
+            raw: true
+        })
+        .then(data => {
+            data.roomCapacity = parseInt(data.roomCapacity);
+            return {message: data, status: 1};
+        })
+        .catch(err => {
+            console.log(err)
+            return {type: err.message, message: err.message, status: 0};
+        })
+    }
 }
 
 module.exports = RoomService;

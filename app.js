@@ -32,17 +32,19 @@ const message = require('./socket/messages');
 
 io.use(socketMiddleware)
 
-io.on("connection", (socket) => {  
-    socket.on("leave-room", room => {
-        console.log(`${socket.id} ${room} LEFT`)
-        socket.leave(room)
-    })     
+io.on("connection", (socket) => {     
     socket.on("join-room", room => {
-        console.log(`${socket.id} ${room} JOINED`)
+        if(socket.lastRoom){
+            socket.leave(socket.lastRoom);
+            socket.lastRoom = null;
+        }
         socket.join(room)
+        socket.lastRoom = room;
     })    
-    socket.on("message", (message, room) => {
+    socket.on("message", (room, cb) => {
+        cb(`Message sent`);
         socket.to(room).emit('receive-message', message);
+        
     })    
 })
 

@@ -66,6 +66,16 @@ class RoomService {
             return {type: err.message, message: err.message, status: 0};
         })
     }
+
+    async leaveRoomCheck(roomId){
+        const roomCapacity = await this.getRoomCapacity(roomId);
+        const capacity = roomCapacity.message.roomCapacity;
+        if(capacity > 1){
+            return {"message": "Leaving room", "status": 1};
+        }
+        return {'message': "You're the last member in the team, if you leave the room and it's chat history will be permanently deleted", "status": 0}
+
+    }
 }
 
 module.exports = RoomService;

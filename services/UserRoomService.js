@@ -1,5 +1,4 @@
 const UserRoomsModel = require('../models/').user_rooms;
-const Rooms = require('../models/').rooms;
 
 class UserRoomService {
 
@@ -15,6 +14,15 @@ class UserRoomService {
         .catch(err => {
             return {type: err.message, message: err.errors[0].message, status: 0};
         })
+    }
+
+    async leaveRoom(userId, roomId){
+        return await UserRoomsModel.destroy({
+            where: {
+                user_id: userId,
+                room_id: roomId 
+            }
+        });
     }
 
 }

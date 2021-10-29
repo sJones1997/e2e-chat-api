@@ -22,27 +22,7 @@ class RoomService {
 
     async getRoom(roomId){
         return await RoomModel.findOne({
-            where: {
-                id: roomId
-            },
-            raw: true,
-            plain: true
-        })
-        .then(data => {
-            if(data){
-                return {message: data, status: 1};
-            }
-            return {message: "This room doesn't exist", status: 0};
-        })
-        .catch(err => {
-            console.log(err.message)
-            return {type: err.message, message: err.errors[0].message, status: 0};
-        })
-    }
-
-    async getRoomCapacity(roomId){
-        return await RoomModel.findOne({
-            attributes:[[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
+            attributes:['rooms.*',[sequelize.fn('count','rooms.id'), 'roomCapacity']],
             include:[{
                 model: User,
                 attributes:[],

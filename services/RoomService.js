@@ -35,6 +35,7 @@ class RoomService {
             return {message: "This room doesn't exist", status: 0};
         })
         .catch(err => {
+            console.log(err.message)
             return {type: err.message, message: err.errors[0].message, status: 0};
         })
     }
@@ -73,7 +74,7 @@ class RoomService {
         if(capacity > 1){
             return {"message": "Leaving room", "status": 1};
         }
-        return {'message': "You're the last member in the team, if you leave the room and it's chat history will be permanently deleted", "status": 0}
+        return {'message': "You're the last member in the team, if you leave the room and it's chat history will be permanently deleted.", "status": 0}
 
     }
 }

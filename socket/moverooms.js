@@ -1,7 +1,7 @@
 
 
 module.exports = (io, socket) => {
-    socket.on("join-room",  async (room, roomId, cb) => {
+    socket.on("move-room",  async (room, roomId, cb) => {
         const roomCheck = await socket.roomService.getRoom(roomId);
         if(roomCheck.status){
             if(socket.lastRoom){

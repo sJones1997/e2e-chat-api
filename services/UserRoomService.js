@@ -16,6 +16,25 @@ class UserRoomService {
         })
     }
 
+    async isUserInRoom(userId, roomId){
+        return await UserRoomsModel.findOne({
+            where: {
+                user_id: userId,
+                room_id: roomId
+            },
+            raw: true
+        })
+        .then(data => {
+            if(data){
+                return {message: data, status: 1};
+            }
+            return {message: "user not in room", status: 0}
+        })
+        .catch(err => {
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        })        
+    }
+
     async leaveRoom(userId, roomId){
         return await UserRoomsModel.destroy({
             where: {

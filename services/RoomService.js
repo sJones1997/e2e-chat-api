@@ -46,14 +46,13 @@ class RoomService {
             return {message: "This room doesn't exist", status: 0};
         })
         .catch(err => {
-            console.log(err.message)
             return {type: err.message, message: err.errors[0].message, status: 0};
         })
     }
 
     async getRoomByNameLike(roomName){
         return await RoomModel.findAll({
-            attributes: ['name'],
+            attributes: ['id','name'],
             where: {
                 name: {
                     [Op.like]: `${roomName}%`
@@ -72,35 +71,33 @@ class RoomService {
         })        
     }
 
-    // async getRoomCapacity(roomId){
-    //     return await RoomModel.findOne({
-    //         attributes:[[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
-    //         include:[{
-    //             model: User,
-    //             attributes:[],
-    //             require:true,
-    //             through: { attributes: []},
-    //             as: 'user'
-    //         }],
-    //         where: {
-    //             id: roomId
-    //         },
-    //         group:['rooms.id'],
-    //         raw: true
-    //     })
-    //     .then(data => {
-    //         if(data || data.length){
-    //             console.log(data)
-    //             data.roomCapacity = parseInt(data.roomCapacity);
-    //             data.roomAdmin = data.roomAdmin === userId ? true : false; 
-    //             return {message: data, status: 1};
-    //         }
-    //         return {message: "This room doesn't exist", status: 0}
-    //     })
-    //     .catch(err => {
-    //         return {type: err.message, message: err.message, status: 0};
-    //     })
-    // }
+    async getRoomCapacity(roomId){
+        return await RoomModel.findOne({
+            attributes:[[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
+            include:[{
+                model: User,
+                attributes:[],
+                require:true,
+                through: { attributes: []},
+                as: 'user'
+            }],
+            where: {
+                id: roomId
+            },
+            group:['rooms.id'],
+            raw: true
+        })
+        .then(data => {
+            if(data || data.length){
+                data.roomCapacity = parseInt(data.roomCapacity);
+                return {message: data, status: 1};
+            }
+            return {message: "This room doesn't exist", status: 0}
+        })
+        .catch(err => {
+            return {type: err.message, message: err.message, status: 0};
+        })
+    }
 
     async leaveRoomCheck(roomId){
         const roomCapacity = await this.getRoom(roomId);

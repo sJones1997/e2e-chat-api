@@ -33,9 +33,10 @@ io.use(socketAuthMiddleware)
 io.use(socketServicesMiddleware);
 
 io.on("connection", (socket) => {     
-    require('./socket/rooms')(io, socket);
+    require('./socket/moverooms')(io, socket);
     require('./socket/messages')(io,socket);  
     require('./socket/search')(io, socket);
+    require('./socket/joinroom')(io, socket);
 })
 
 const indexRouter = require('./routes/index');

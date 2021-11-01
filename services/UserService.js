@@ -1,6 +1,7 @@
 const UserModel = require('../models').users;
 const RoomModel = require('../models').rooms;
 const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 class UserService { 
 
@@ -34,6 +35,27 @@ class UserService {
         .catch(err => {
             return {type: err.message, message: err.errors[0].message, status: 0};
         })        
+    }
+
+    async getUserByNameLike(username){
+        return await UserModel.findAll({
+            attributes: ['username'],
+            where: {
+                username: {
+                    [Op.like]: `${username}%`
+                }
+            },
+            raw: true
+        })
+        .then(data => {
+            if(data.length){
+                return {message: data, status: 1}
+            }
+            return {message: "No user with this name", status: 0}
+        })
+        .catch(err => {
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        })         
     }
 
     async getUserRooms(userId){

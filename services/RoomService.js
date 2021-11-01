@@ -1,6 +1,7 @@
 const RoomModel = require('../models').rooms;
 const User = require('../models').users;
 const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 class RoomService {
 
@@ -40,6 +41,27 @@ class RoomService {
         })
     }
 
+    async getRoomByNameLike(roomName){
+        return await RoomModel.findAll({
+            attributes: ['name'],
+            where: {
+                name: {
+                    [Op.like]: `${roomName}%`
+                }
+            },
+            raw: true
+        })
+        .then(data => {
+            if(data.length){
+                return {message: data, status: 1}
+            }
+            return {message: "No rooms with this name", status: 0}
+        })
+        .catch(err => {
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        })        
+    }
+
     async getRoomCapacity(roomId){
         return await RoomModel.findOne({
             attributes:[[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
@@ -57,7 +79,7 @@ class RoomService {
             raw: true
         })
         .then(data => {
-            if(data){
+            if(data || data.length){
                 data.roomCapacity = parseInt(data.roomCapacity);
                 return {message: data, status: 1};
             }

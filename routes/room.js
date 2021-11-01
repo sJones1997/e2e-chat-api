@@ -17,10 +17,13 @@ roomRouter.post('/', newRoomValidation(), validatorMiddleware, async (req, res) 
     return res.status(400).json({"message": newRoom.message});
 })
 
-roomRouter.get('/capacity/:roomId', async(req, res) => {
-    const getRoomCapacity = await req.body.roomService.getRoomCapacity(req.params.roomId);
-    if(getRoomCapacity.status){
-        return res.status(200).json({"message": getRoomCapacity.message})
+
+
+roomRouter.get('/:roomId', async(req, res) => {
+    const room = await req.body.roomService.getRoom(req.params.roomId);
+    console.log(room)
+    if(room.status){
+        return res.status(200).json({"message": room.message})
     }
-    res.status(400).json({"message": getRoomCapacity.message});
+    res.status(400).json({"message": room.message});
 })

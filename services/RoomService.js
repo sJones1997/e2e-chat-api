@@ -23,6 +23,7 @@ class RoomService {
 
     async getRoom(roomId){
         return await RoomModel.findOne({
+            attributes:['rooms.*',[sequelize.fn('count','rooms.id'), 'roomCapacity']],            
             where: {
                 id: roomId
             },

@@ -2,7 +2,7 @@ const UserModel = require('../models').users;
 const RoomModel = require('../models').rooms;
 const sequelize = require('sequelize');
 
-class UserService { 
+class UserService  { 
 
     async createUser(username = null, hash = null, salt = null){
         return await UserModel.create({
@@ -38,7 +38,7 @@ class UserService {
 
     async getUserRooms(userId){
         return await UserModel.findAll({     
-            attributes: [[sequelize.col("rooms.id"), "roomId"], [sequelize.col("rooms.name"), "name"], [sequelize.fn('count','rooms.id'), 'roomCapacity'], [sequelize.col("rooms.room_admin"), "roomAdmin"], 'rooms.limit', [sequelize.col("rooms.created_at"), "createdAt"]], 
+            attributes: [[sequelize.col("rooms.id"), "roomId"], [sequelize.col("rooms.name"), "name"], [sequelize.col("rooms.created_at"), "createdAt"]], 
             include: [{
                 attributes: [],
                 model: RoomModel,
@@ -49,16 +49,11 @@ class UserService {
             }],            
             where: {
                 id: userId
-            },
-            group:['rooms.id'],            
+            },            
             order: [[sequelize.col("rooms.created_at"), 'DESC']],
             raw: true
         })
-        .then(data => {
-            data.map(e => {
-                e.roomAdmin = e.roomAdmin === userId ? true: false;
-                e.roomCapacity = parseInt(e.roomCapacity);
-            });            
+        .then(data => {;          
             return {message: data, status: 1};
         })
         .catch(err => {

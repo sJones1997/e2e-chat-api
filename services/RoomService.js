@@ -20,9 +20,9 @@ class RoomService {
         })
     }
 
-    async getRoom(roomId){
+    async getRoom(roomId, userId){
         return await RoomModel.findOne({
-            attributes:['rooms.*',[sequelize.fn('count','rooms.id'), 'roomCapacity']],
+            attributes:['rooms.id', 'name', [sequelize.col('room_admin'), 'roomAdmin'], 'limit', [sequelize.fn('count','rooms.id'), 'roomCapacity']],
             include:[{
                 model: User,
                 attributes:[],
@@ -39,6 +39,7 @@ class RoomService {
         .then(data => {
             if(data){
                 data.roomCapacity = parseInt(data.roomCapacity);
+                data.roomAdmin = data.roomAdmin === userId ? true : false; 
                 return {message: data, status: 1};
             }
             return {message: "This room doesn't exist", status: 0}
@@ -49,13 +50,29 @@ class RoomService {
     }
 
     async leaveRoomCheck(roomId){
-        const roomCapacity = await this.getRoomCapacity(roomId);
+        const roomCapacity = await this.getRoom(roomId);
         const capacity = roomCapacity.message.roomCapacity;
         if(capacity > 1){
             return {"message": "Leaving room", "status": 1};
         }
         return {'message': "You're the last member in the team, if you leave the room and it's chat history will be permanently deleted.", "status": 0}
 
+    }
+
+    async deleteRoom(roomId){
+        return await RoomModel.destroy({
+            where: {
+                id: roomId
+            }
+        })
+        .then(data => {
+            if(data){
+                return {message: 'Room deleted', status: 1}
+            }
+        })
+        .catch(err => {
+            return {type: err.message, message: err.message, status: 0};
+        })
     }
 }
 

@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 
+require('dotenv').config();
+
 app.use(express.json());
 
 const cors = require('cors');
 const corsFunc = require('./cors/cors')
 app.use(cors(corsFunc));
-
-require('dotenv').config();
 
 const server = require('http').createServer(app);
 

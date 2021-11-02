@@ -9,16 +9,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true        
       },
       limit: {
         type: Sequelize.INTEGER
       },
-      password: {
-        type: Sequelize.STRING
-      },
-      salt: {
-        type: Sequelize.STRING
+      room_admin:{
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key:'id'
+        }
       },
       created_at: {
         allowNull: false,

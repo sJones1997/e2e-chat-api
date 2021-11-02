@@ -20,12 +20,21 @@ module.exports = (sequelize, DataTypes) => {
         as: 'rooms',
         foreignKey: 'user_id'
       });
+      users.hasOne(models.google_users, {
+        foreignKey: 'user_id'
+      });
+      users.hasOne(models.rooms, {
+        foreignKey: 'room_admin',
+        as: 'r_a'
+      })
     }
   };
   users.init({
     username: DataTypes.STRING,
     password: DataTypes.STRING,
-    salt: DataTypes.STRING
+    salt: DataTypes.STRING,
+    created_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'users',

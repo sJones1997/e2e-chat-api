@@ -9,10 +9,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key:'id'
+        }        
       },
       room_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',        
+        references: {
+          model: 'rooms',
+          key: 'id',
+
+        }        
       },
       created_at: {
         allowNull: false,

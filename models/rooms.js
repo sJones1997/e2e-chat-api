@@ -13,20 +13,26 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       rooms.belongsToMany(models.users, {
         through: 'user_rooms',
-        as: 'users',
-        foreignKey: 'room_id'
+        as: 'user',
+        foreignKey: 'room_id',
+        onDelete: 'CASCADE'        
       });
       rooms.hasMany(models.messages, {
         foreignKey: 'room_id',
         as: 'room'
+      });
+      rooms.belongsTo(models.users, {
+        foreignKey: 'room_admin',
+        as: 'r_a'
       });
     }
   };
   rooms.init({
     name: DataTypes.STRING,
     limit: DataTypes.INTEGER,
-    password: DataTypes.STRING,
-    salt: DataTypes.STRING
+    room_admin: DataTypes.INTEGER,
+    created_at: DataTypes.DATE,
+    updated_at: DataTypes.DATE    
   }, {
     sequelize,
     modelName: 'rooms',

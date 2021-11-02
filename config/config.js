@@ -5,7 +5,11 @@ module.exports = {
         "password": process.env.DB_PASSWORD,
         "database": process.env.DB_DATABASE,
         "host": process.env.HOST,
-        "dialect": process.env.DB_DIALECT    
+        "dialect": process.env.DB_DIALECT,
+        "underscore":true,
+        "define": {
+          "timestamps": false
+        }        
     },
     "test": {
         "username": process.env.DB_USER,

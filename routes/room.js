@@ -31,7 +31,7 @@ roomRouter.get('/:roomId', async(req, res) => {
 });
 
 roomRouter.delete('/:roomId', async(req, res) => {
-    const leaveRoomCheck = await req.body.roomService.leaveRoomCheck(req.body.roomId);
+    const leaveRoomCheck = await req.body.roomService.leaveRoomCheck(req.body.room.id);
     if(!leaveRoomCheck.status){
         const deleteRoom = await req.body.roomService.deleteRoom(req.body.room.id);
         if(deleteRoom.status){

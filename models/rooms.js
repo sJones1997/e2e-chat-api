@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       rooms.belongsToMany(models.users, {
         through: 'user_rooms',
         as: 'user',
-        foreignKey: 'room_id'
+        foreignKey: 'room_id',
+        onDelete: 'CASCADE'        
       });
       rooms.hasMany(models.messages, {
         foreignKey: 'room_id',

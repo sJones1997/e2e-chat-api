@@ -1,6 +1,9 @@
 const UserModel = require('../models').users;
+const RoomModel = require('../models').rooms;
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
-class UserService { 
+class UserService  { 
 
     async createUser(username = null, hash = null, salt = null){
         return await UserModel.create({
@@ -33,6 +36,52 @@ class UserService {
             return {type: err.message, message: err.errors[0].message, status: 0};
         })        
     }
+
+    async getUserByNameLike(username){
+        return await UserModel.findAll({
+            attributes: ['username'],
+            where: {
+                username: {
+                    [Op.like]: `${username}%`
+                }
+            },
+            raw: true
+        })
+        .then(data => {
+            if(data.length){
+                return {message: data, status: 1}
+            }
+            return {message: "No user with this name", status: 0}
+        })
+        .catch(err => {
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        })         
+    }
+
+    async getUserRooms(userId){
+        return await UserModel.findAll({     
+            attributes: [[sequelize.col("rooms.id"), "roomId"], [sequelize.col("rooms.name"), "name"], [sequelize.col("rooms.created_at"), "createdAt"]], 
+            include: [{
+                attributes: [],
+                model: RoomModel,
+                through: {
+                    attributes: []
+                },
+                as: "rooms"
+            }],            
+            where: {
+                id: userId
+            },            
+            order: [[sequelize.col("rooms.created_at"), 'DESC']],
+            raw: true
+        })
+        .then(data => {;          
+            return {message: data, status: 1};
+        })
+        .catch(err => {
+            return {type: err.message, message: err.errors[0].message, status: 0};
+        }) 
+    }     
 }
 
 module.exports = UserService

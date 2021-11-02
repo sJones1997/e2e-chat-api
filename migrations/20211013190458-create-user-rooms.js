@@ -17,9 +17,11 @@ module.exports = {
       },
       room_id: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',        
         references: {
           model: 'rooms',
-          key: 'id'
+          key: 'id',
+
         }        
       },
       created_at: {

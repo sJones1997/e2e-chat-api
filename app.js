@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 
+require('dotenv').config();
+
 app.use(express.json());
 
 const cors = require('cors');
 const corsFunc = require('./cors/cors')
 app.use(cors(corsFunc));
-
-require('dotenv').config();
 
 const server = require('http').createServer(app);
 
@@ -26,14 +26,17 @@ const passport = require('passport');
 
 app.use(passport.initialize());
 
-const socketMiddleware = require('./middlewares/socketMiddleware');
-const rooms = require('./socket/rooms');
-const message = require('./socket/messages');
+const socketAuthMiddleware = require('./middlewares/socketAuthMiddleware');
+const socketServicesMiddleware = require('./middlewares/socketServicesMiddleware');
 
-io.use(socketMiddleware)
+io.use(socketAuthMiddleware)
+io.use(socketServicesMiddleware);
 
-io.on("connection", (socket) => {
-    message(io, socket);
+io.on("connection", (socket) => {     
+    require('./socket/moverooms')(io, socket);
+    require('./socket/messages')(io,socket);  
+    require('./socket/search')(io, socket);
+    require('./socket/joinroom')(io, socket);
 })
 
 const indexRouter = require('./routes/index');

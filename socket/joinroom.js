@@ -1,12 +1,13 @@
 module.exports = (io, socket) => {
     socket.on("join-room", async (roomId, cb) => {
         const roomCapacityCheck = await socket.roomService.getRoomCapacity(roomId);
-        const {roomCapacity, limit} = roomCapacityCheck.message;
+        const {name, roomCapacity, limit} = roomCapacityCheck.message;
         if(!(roomCapacity >= limit)){
             const isInRoom = await socket.userRoomService.isUserInRoom(socket.id, roomId);
             if(!isInRoom.status){
                 const addUserToRoom = await socket.userRoomService.addUserToRoom(socket.id, roomId);
                 if(addUserToRoom.status){
+                    socket.to(name).emit("user-joined", true);
                     cb('Joined!', true);
                 } else {
                     cb('Problem joining room!', false)

@@ -46,7 +46,8 @@ class RoomService {
             return {message: "This room doesn't exist", status: 0};
         })
         .catch(err => {
-            return {type: err.message, message: err.errors[0].message, status: 0};
+            console.log(err.message)
+            return {message: err.message, status: 0};
         })
     }
 
@@ -73,7 +74,7 @@ class RoomService {
 
     async getRoomCapacity(roomId){
         return await RoomModel.findOne({
-            attributes:[[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
+            attributes:['name',[sequelize.fn('count','rooms.id'), 'roomCapacity'], 'rooms.limit'],
             include:[{
                 model: User,
                 attributes:[],
@@ -95,12 +96,13 @@ class RoomService {
             return {message: "This room doesn't exist", status: 0}
         })
         .catch(err => {
-            return {type: err.message, message: err.message, status: 0};
+            return {message: err.message, status: 0};
         })
     }
 
     async leaveRoomCheck(roomId){
-        const roomCapacity = await this.getRoom(roomId);
+        const roomCapacity = await this.getRoomCapacity(roomId);
+        console.log(roomCapacity);
         const capacity = roomCapacity.message.roomCapacity;
         if(capacity > 1){
             return {"message": "Leaving room", "status": 1};
@@ -117,10 +119,12 @@ class RoomService {
         })
         .then(data => {
             if(data){
+                console.log(data)
                 return {message: 'Room deleted', status: 1}
             }
         })
         .catch(err => {
+            console.log(err);
             return {type: err.message, message: err.message, status: 0};
         })
     }

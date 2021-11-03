@@ -37,6 +37,7 @@ io.on("connection", (socket) => {
     require('./socket/messages')(io,socket);  
     require('./socket/search')(io, socket);
     require('./socket/joinroom')(io, socket);
+    require('./socket/leaveroom')(io, socket);
 })
 
 const indexRouter = require('./routes/index');

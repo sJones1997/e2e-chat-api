@@ -10,7 +10,7 @@ module.exports = (io, socket) => {
             }
             socket.join(room)
             socket.lastRoom = room;
-            cb(true);
+            cb(true, 'connected');
         } else {
             cb(false, "The room you've tried to join does not exist, please try another room.");        
         }

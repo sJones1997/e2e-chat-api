@@ -9,7 +9,9 @@ module.exports = (io, socket) => {
                     const messageSaved = await socket.messageService.saveMessage(messageObj);
                     if(messageSaved.status){
                         // socket.to(room).emit('receive-message', messageObj.message);
-                        cb(true, 'Message sent!')
+                        delete messageSaved.message['user_id'];
+                        messageSaved.message['local_user'] = true
+                        cb(true, messageSaved.message);
                     } else {
                         cb(false, 'Something went wrong');                     
                     }

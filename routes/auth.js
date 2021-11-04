@@ -4,6 +4,7 @@ const validatorMiddleware = require('../middlewares/validatorMiddleware');
 const {registerValidation, loginValidation} = require('../validators/validators');
 const base64DecodeMiddleware = require('../middlewares/base64Middleware');
 const passport = require('passport');
+const jwtMiddleware = require('../middlewares/jwtMiddleware');
 module.exports = authRouter;
 
 authRouter.post('/register', base64DecodeMiddleware, registerValidation(), validatorMiddleware, async (req, res) => {
@@ -25,6 +26,16 @@ authRouter.post('/login', base64DecodeMiddleware, loginValidation(), validatorMi
     }
     return res.status(400).json(login);
 });
+
+authRouter.get('/verify', jwtMiddleware,  (req, res) => {
+    res.status(200).json({message: 'User signed in.'});
+})
+
+authRouter.get('/logout', async (req, res) => {
+    req.logout();
+    res.clearCookie('token');
+    res.status(200).json({message: 'logged out'});
+})
 
 authRouter.get('/google', passport.authenticate('google', {
     scope: ['profile']

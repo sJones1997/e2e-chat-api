@@ -1,14 +1,14 @@
 
 module.exports = (io, socket) => {
-    socket.on("send-message", (messageObj, cb) => {
+    socket.on("send-message", async (messageObj, cb) => {
         if(Object.entries(messageObj).length){
-            const userInRoom = socket.userRoomService.isUserInRoom(socket.id, messageObj.roomId);
-            if(userInRoom){
+            const userInRoom = await socket.userRoomService.isUserInRoom(socket.id, messageObj.roomId);
+            if(userInRoom.status){
                 messageObj.userId = socket.id;
-                const messageSaved = socket.messageService.saveMessage(messageObj);
+                const messageSaved = await socket.messageService.saveMessage(messageObj);
                 if(messageSaved.status){
                     // socket.to(room).emit('receive-message', messageObj.message);
-                    cb(true)
+                    cb(true, 'Message sent!')
                 } else {
                     cb(false, 'Something went wrong');                     
                 }

@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
   messages.init({
     message: DataTypes.TEXT,
     user_id: DataTypes.INTEGER,
-    room_id: DataTypes.INTEGER
+    room_id: DataTypes.INTEGER,
+    created_at: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'messages',

@@ -31,7 +31,7 @@ class UserRoomService {
             return {message: "user not in room", status: 0}
         })
         .catch(err => {
-            return {type: err.message, message: err.errors[0].message, status: 0};
+            return {message: err.message, status: 0};
         })        
     }
 

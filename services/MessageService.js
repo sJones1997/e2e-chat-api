@@ -1,4 +1,5 @@
 const MessageModel = require('../models').messages
+const User = require('../models').users;
 
 class MessageService {
 
@@ -10,12 +11,59 @@ class MessageService {
             created_at: messageObj.sent
         })
         .then(data => {
-            console.log(data.toJSON())
             return {message: data.toJSON(), status: 1}
         })
         .catch(err => {
             console.log(err.message)
             return {message: err.message, status: 0};
+        })        
+    }
+
+    async getRoomMessages(roomId, userId){
+        return await MessageModel.findAll({
+            attributes: ['message', 'room_id', ['user_id', 'local_user'], 'user.username', 'created_at'],
+            include: {
+                model: User,
+                attributes:[],
+                require:true,
+                as: 'user'
+            },
+            where: {
+                room_id: roomId
+            },
+            order: [['created_at', 'DESC']],
+            raw: true
+        })
+        .then(data => {
+            console.log(data);
+            if(data.length){
+                data.map(e => (
+                    e.local_user = e.local_user === userId ? true : false
+                ))
+                return {message: data, status: 1}                
+            }
+            return {message: 'No messages in this room!', status: 0}              
+        })
+        .catch(err => {
+            console.log(err.message);
+            return {message: err.message, status: 0}
+        })
+    }
+
+    async deleteRoomMessages(roomId){
+        return await MessageModel.destroy({
+            where:{
+                room_id: roomId
+            }
+        })
+        .then(data => {
+            if(data.length){
+                return {message: 'Messages deleted for room', status: 1}                
+            }
+            return {message: 'Nothing to delete!', status: 1}                   
+        })
+        .catch(err => {
+            return {message: err.message, status: 0}
         })        
     }
 

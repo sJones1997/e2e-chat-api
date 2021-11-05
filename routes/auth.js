@@ -24,6 +24,7 @@ authRouter.post('/login', base64DecodeMiddleware, loginValidation(), validatorMi
         res.cookie('token', token, {httpOnly: true, sameSite:true})          
         return res.status(200).json({'message': 'Sign in successful'});
     }
+    console.log(login)
     return res.status(400).json(login);
 });
 

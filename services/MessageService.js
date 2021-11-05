@@ -1,4 +1,5 @@
 const MessageModel = require('../models').messages
+const User = require('../models').users;
 
 class MessageService {
 
@@ -20,7 +21,13 @@ class MessageService {
 
     async getRoomMessages(roomId, userId){
         return await MessageModel.findAll({
-            attributes: ['message', 'room_id', ['user_id', 'local_user'], 'created_at'],
+            attributes: ['message', 'room_id', ['user_id', 'local_user'], 'user.username', 'created_at'],
+            include: {
+                model: User,
+                attributes:[],
+                require:true,
+                as: 'user'
+            },
             where: {
                 room_id: roomId
             },

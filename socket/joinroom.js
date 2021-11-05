@@ -7,7 +7,9 @@ module.exports = (io, socket) => {
             if(!isInRoom.status){
                 const addUserToRoom = await socket.userRoomService.addUserToRoom(socket.id, roomId);
                 if(addUserToRoom.status){
-                    socket.to(name).emit("user-joined", true);
+                    const getUser = await socket.userService.getUserById(socket.id);
+                    const username = getUser.message.username;
+                    socket.to(name).emit("user-joined", true, username);
                     cb('Joined!', true);
                 } else {
                     cb('Problem joining room!', false)

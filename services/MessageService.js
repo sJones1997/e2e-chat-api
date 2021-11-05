@@ -10,13 +10,37 @@ class MessageService {
             created_at: messageObj.sent
         })
         .then(data => {
-            console.log(data.toJSON())
             return {message: data.toJSON(), status: 1}
         })
         .catch(err => {
             console.log(err.message)
             return {message: err.message, status: 0};
         })        
+    }
+
+    async getRoomMessages(roomId, userId){
+        return await MessageModel.findAll({
+            attributes: ['message', 'room_id', ['user_id', 'local_user'], 'created_at'],
+            where: {
+                room_id: roomId
+            },
+            order: [['created_at', 'DESC']],
+            raw: true
+        })
+        .then(data => {
+            console.log(data);
+            if(data.length){
+                data.map(e => (
+                    e.local_user = e.local_user === userId ? true : false
+                ))
+                return {message: data, status: 1}                
+            }
+            return {message: 'No messages in this room!', status: 0}              
+        })
+        .catch(err => {
+            console.log(err.message);
+            return {message: err.message, status: 0}
+        })
     }
 
 }

@@ -8,9 +8,11 @@ module.exports = (io, socket) => {
                     messageObj.userId = socket.id;
                     const messageSaved = await socket.messageService.saveMessage(messageObj);
                     if(messageSaved.status){
-                        // socket.to(room).emit('receive-message', messageObj.message);
-                        delete messageSaved.message['user_id'];
-                        messageSaved.message['local_user'] = true
+                        delete messageSaved.message.user_id
+                        messageToSend = messageSaved;
+                        messageToSend.message.local_user = false;
+                        socket.to(messageObj.roomName).emit('receive-message', messageToSend);
+                        messageSaved.message.local_user = true
                         cb(true, messageSaved.message);
                     } else {
                         cb(false, 'Something went wrong');                     

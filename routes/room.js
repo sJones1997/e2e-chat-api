@@ -33,11 +33,16 @@ roomRouter.get('/:roomId', async(req, res) => {
 roomRouter.delete('/:roomId', async(req, res) => {
     const leaveRoomCheck = await req.body.roomService.leaveRoomCheck(req.body.room.id);
     if(!leaveRoomCheck.status){
-        const deleteRoom = await req.body.roomService.deleteRoom(req.body.room.id);
-        if(deleteRoom.status){
-            return res.status(200).json(deleteRoom);
+        const deleteMessages = await req.body.messageService.deleteRoomMessages(req.body.room.id);
+        console.log(deleteMessages)
+        if(deleteMessages.status){
+            const deleteRoom = await req.body.roomService.deleteRoom(req.body.room.id);
+            if(deleteRoom.status){
+                return res.status(200).json(deleteRoom);
+            }
+            return res.status(500).json({'message': 'Something went wrong deleteing rooms.'})
         }
-        return res.status(500).json({'message': 'Something went wrong.'})
+        return res.status(500).json({'message': 'Something went wrong deleting messages.'})        
     }
     res.status(400).json({'message': 'Are you unable to delete this room while there are members still in it.'})  
 })

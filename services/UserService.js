@@ -21,10 +21,10 @@ class UserService  {
         })
     }    
 
-    async getUserByUsername(username){
-        return await UserModel.findAll({
+    async getUserById(userId){
+        return await UserModel.findOne({
             where: {
-                username: username
+                id: userId
             },
             raw: true,
             plain: true 
@@ -34,6 +34,25 @@ class UserService  {
         })
         .catch(err => {
             return {type: err.message, message: err.errors[0].message, status: 0};
+        })         
+    }
+
+    async getUserByUsername(username){
+        return await UserModel.findAll({
+            where: {
+                username: username
+            },
+            raw: true,
+            plain: true 
+        })
+        .then(data => {
+            if(data){
+                return {message: data, status: 1};
+            }
+            return {message: 'Unable to login, please check your details', status: 0};
+        })
+        .catch(err => {
+            return {type: err.message, message: err.message, status: 0};
         })        
     }
 
@@ -75,11 +94,14 @@ class UserService  {
             order: [[sequelize.col("rooms.created_at"), 'DESC']],
             raw: true
         })
-        .then(data => {;          
-            return {message: data, status: 1};
+        .then(data => {
+            if(!(data.length === 1 && data[0].roomId === null)){
+                return {message: data, status: 1};
+            }          
+            return {message: 'No rooms', status: 0}
         })
         .catch(err => {
-            return {type: err.message, message: err.errors[0].message, status: 0};
+            return {message: err.errors, status: 0};
         }) 
     }     
 }

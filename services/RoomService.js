@@ -6,6 +6,7 @@ const Op = sequelize.Op;
 class RoomService {
 
     async createRoom(roomName, roomLimit, roomAdmin){
+        console.log(roomName, roomLimit, roomAdmin)
         return await RoomModel.create({
             name: roomName,
             limit: roomLimit,
@@ -17,7 +18,8 @@ class RoomService {
             return {message: data.toJSON(), status: 1};
         })
         .catch(err => {
-            return {type: err.message, message: err.errors[0].message, status: 0};
+            console.log(err.message);
+            return {type: err.message, message: err.message, status: 0};
         })
     }
 

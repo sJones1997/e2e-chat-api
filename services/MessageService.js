@@ -43,6 +43,23 @@ class MessageService {
         })
     }
 
+    async deleteRoomMessages(roomId){
+        return await MessageModel.destroy({
+            where:{
+                room_id: roomId
+            }
+        })
+        .then(data => {
+            if(data.length){
+                return {message: 'Messages deleted for room', status: 1}                
+            }
+            return {message: 'Nothing to delete!', status: 1}                   
+        })
+        .catch(err => {
+            return {message: err.message, status: 0}
+        })        
+    }
+
 }
 
 module.exports = MessageService;

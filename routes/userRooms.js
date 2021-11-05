@@ -15,6 +15,9 @@ userRoomRouter.get('/', async (req, res) => {
     if(userRooms.status){
         return res.status(200).json({"message": userRooms.message})
     }
+    if(userRooms.message === 'No rooms'){
+        return res.status(201).json({message: userRooms.message});
+    }
     res.status(400).json({"message": "Unable to fetch user rooms."});
 });
 

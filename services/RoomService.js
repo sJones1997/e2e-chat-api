@@ -6,7 +6,6 @@ const Op = sequelize.Op;
 class RoomService {
 
     async createRoom(roomName, roomLimit, roomAdmin){
-        console.log(roomName, roomLimit, roomAdmin)
         return await RoomModel.create({
             name: roomName,
             limit: roomLimit,
@@ -19,7 +18,7 @@ class RoomService {
         })
         .catch(err => {
             console.log(err.message);
-            return {type: err.message, message: err.message, status: 0};
+            return {type: err.message, message: "Room names must be unique!", status: 0};
         })
     }
 

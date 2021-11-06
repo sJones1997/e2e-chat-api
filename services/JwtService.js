@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 class JwtService {
 
     generateJWT(payload){
-        const privateKEY = fs.readFileSync(path.resolve('keys/private.key'), 'utf-8');
+        // const privateKEY = fs.readFileSync(path.resolve('keys/private.key'), 'utf-8');
         const signOptions = {
             issuer: 'e2e webchat app',
             subject: 'web chat',
@@ -21,7 +21,7 @@ class JwtService {
 
     verifyJWT(token){
 
-        const publicKEY = fs.readFileSync(path.resolve('keys/public.key'), 'utf-8');
+        // const publicKEY = fs.readFileSync(path.resolve('keys/public.key'), 'utf-8');
     
         const signOptions = {
             issuer: 'e2e webchat app',

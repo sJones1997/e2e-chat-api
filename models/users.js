@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'user_id'
       });
       users.hasOne(models.google_users, {
-        foreignKey: 'user_id'
+        foreignKey: 'user_id',
+        as: 'google'
       });
       users.hasOne(models.rooms, {
         foreignKey: 'room_admin',

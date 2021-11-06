@@ -43,5 +43,7 @@ authRouter.get('/google', passport.authenticate('google', {
 }));
 
 authRouter.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-    res.send("here")
+    const token = req.body.jwtService.generateJWT({userId: req.user.userId, username: req.user.username});    
+    res.cookie('token', token)          
+    return res.status(200).redirect(process.env.CLIENT_HOST)
 })

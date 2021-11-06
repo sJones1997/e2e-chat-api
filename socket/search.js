@@ -11,6 +11,7 @@ module.exports = (io, socket) => {
             }
         }
         resultObj['rooms'] = roomByNameLike;
+        console.log(resultObj)
         cb(resultObj);
     })
 }

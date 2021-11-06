@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       google_users.belongsTo(models.users, {
-        foreignKey: 'user_id'        
+        foreignKey: 'user_id',
+        as: 'google'       
       })
     }
   };

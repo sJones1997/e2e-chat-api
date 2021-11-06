@@ -3,6 +3,10 @@ const app = express();
 
 require('dotenv').config();
 
+const passport = require('passport');
+const googleSetup = require('./passport/google');
+app.use(passport.initialize());
+
 app.use(express.json());
 
 const cors = require('cors');
@@ -21,10 +25,6 @@ app.use(cookieParser());
 
 const sioCookieParser = require('socket.io-cookie-parser');
 io.use(sioCookieParser())
-
-const passport = require('passport');
-
-app.use(passport.initialize());
 
 const socketAuthMiddleware = require('./middlewares/socketAuthMiddleware');
 const socketServicesMiddleware = require('./middlewares/socketServicesMiddleware');

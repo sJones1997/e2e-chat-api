@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       google_users.belongsTo(models.users, {
         foreignKey: 'user_id',
-        as: 'google'       
+        as: 'gu'       
       })
     }
   };

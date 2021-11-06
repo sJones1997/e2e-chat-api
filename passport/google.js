@@ -16,11 +16,10 @@ passport.use(new GoogleStrategy({
         const googleService = new GoogleService();
         const googleUser = await googleService.getUserByGoogleId(profile.id);
         if(!googleUser){
-            const newUser = await userService.createUser(profile.displayName);
+            const newUser = await userService.createUser(null,null,null,0);
             if(newUser.status){
                 const newGoogleUser = await googleService.createGoogleUser(profile.displayName, profile.id, newUser.message.id);
                 if(newGoogleUser.status){
-                    console.log(newUser)
                     done(null, {userId: newUser.message.id, googleDetails: newGoogleUser});                    
                 }
                 return {'message': 'Problem creating google user', 'status': 0}

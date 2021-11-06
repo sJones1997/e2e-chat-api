@@ -1,5 +1,6 @@
 const MessageModel = require('../models').messages
-const User = require('../models').users;
+const UserModel = require('../models').users;
+const GoogleModel = require('../models').google_users;
 
 class MessageService {
 
@@ -20,13 +21,20 @@ class MessageService {
     }
 
     async getRoomMessages(roomId, userId){
+        console.log("ROOM MESSAGE")
         return await MessageModel.findAll({
-            attributes: ['message', 'room_id', ['user_id', 'local_user'], 'user.username', 'created_at'],
+            attributes: ['message', 'room_id', ['user_id', 'local_user'], 'user.username', 'user.gu.profile_name', 'created_at'],
             include: {
-                model: User,
+                model: UserModel,
                 attributes:[],
                 require:true,
-                as: 'user'
+                as: 'user',
+                include: {
+                    model: GoogleModel,
+                    attributes: [],
+                    require: true,
+                    as:'gu'
+                }
             },
             where: {
                 room_id: roomId
@@ -35,9 +43,10 @@ class MessageService {
             raw: true
         })
         .then(data => {
-            console.log(data);
             if(data.length){
                 data.map(e => (
+                    e.username = e.username === null ? e.profile_name : e.username,
+                    delete e.profile_name,
                     e.local_user = e.local_user === userId ? true : false
                 ))
                 return {message: data, status: 1}                

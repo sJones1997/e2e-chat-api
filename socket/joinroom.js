@@ -7,8 +7,14 @@ module.exports = (io, socket) => {
             if(!isInRoom.status){
                 const addUserToRoom = await socket.userRoomService.addUserToRoom(socket.id, roomId);
                 if(addUserToRoom.status){
-                    const getUser = await socket.userService.getUserById(socket.id);
-                    const username = getUser.message.username;
+                    const getUser = await socket.userService.getUserById(socket.id);                    
+                    let username; 
+                    if(!getUser.message.local_account){
+                        const googleUser = await socket.googleService.getGoogleUser(socket.id);
+                        username = googleUser.message.profile_name;
+                    } else {
+                        username = getUser.message.username;                            
+                    }
                     socket.to(name).emit("user-joined", true, username);
                     cb('Joined!', true);
                 } else {

@@ -18,6 +18,9 @@ module.exports = {
       salt: {
         type: Sequelize.STRING
       },
+      local_account: {
+        type: Sequelize.INTEGER
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

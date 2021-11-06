@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       users.hasOne(models.google_users, {
         foreignKey: 'user_id',
-        as: 'google'
+        as: 'gu'
       });
       users.hasOne(models.rooms, {
         foreignKey: 'room_admin',
@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     salt: DataTypes.STRING,
+    local_account: DataTypes.INTEGER,
     created_at: DataTypes.DATE,
     updated_at: DataTypes.DATE
   }, {

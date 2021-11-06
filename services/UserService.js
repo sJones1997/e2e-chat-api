@@ -5,11 +5,12 @@ const Op = sequelize.Op;
 
 class UserService  { 
 
-    async createUser(username = null, hash = null, salt = null){
+    async createUser(username = null, hash = null, salt = null, localUser = 1){
         return await UserModel.create({
             username: username,
             password: hash,
             salt: salt,
+            local_account: localUser,
             created_at: Date(),
             updated_at: Date()
         })
@@ -17,7 +18,8 @@ class UserService  {
             return {message: data.toJSON(), status: 1};
         })
         .catch(err => {
-            return {type: err.message, message: err.errors[0].message, status: 0};
+            console.log(err.message)
+            return {type: err.message, message: 'Username already taken, please try something else!', status: 0};
         })
     }    
 

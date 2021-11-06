@@ -14,7 +14,7 @@ class JwtService {
             algorithm:  "RS256"
         };
     
-        const token = jwt.sign(payload, privateKEY, signOptions);  
+        const token = jwt.sign(payload, process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), signOptions);  
         return token;
     }
 
@@ -30,8 +30,8 @@ class JwtService {
             expiresIn: '24h',
             algorithm:  ["RS256"]
         };
-    
-        return jwt.verify(token, publicKEY, signOptions, (err, data) => {
+
+        return jwt.verify(token, process.env.PUBLIC_KEY.replace(/\\n/g, '\n'), signOptions, (err, data) => {
             if(err){
                 return false;
             }

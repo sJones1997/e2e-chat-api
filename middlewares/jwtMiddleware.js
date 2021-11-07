@@ -2,8 +2,8 @@ const JwtService = require("../services/JwtService");
 
 const jwtMiddleware = (req, res, next) => {
     const jwtSerivce = new JwtService();
-    const {token} = req.cookies
-    const verify = jwtSerivce.verifyJWT(token);
+    const {e2etoken} = req.cookies
+    const verify = jwtSerivce.verifyJWT(e2etoken);
     if(verify){
         req.body.userId = verify.userId
         next();

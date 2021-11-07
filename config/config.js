@@ -9,7 +9,8 @@ module.exports = {
         "underscore":true,
         "define": {
           "timestamps": false
-        }        
+        },
+        "logging": false   
     },
     "test": {
         "username": process.env.DB_USER,

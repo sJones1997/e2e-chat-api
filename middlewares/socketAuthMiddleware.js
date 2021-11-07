@@ -2,9 +2,9 @@ const JwtService = require('../services/JwtService');
 
 module.exports = (socket, next) =>{
     const jwtService = new JwtService();
-    const token = socket.request.cookies.token;
-    if(jwtService.verifyJWT(token) !== false){
-        const userId = jwtService.verifyJWT(token).userId;
+    const e2etoken = socket.request.cookies.e2etoken;
+    if(jwtService.verifyJWT(e2etoken) !== false){
+        const userId = jwtService.verifyJWT(e2etoken).userId;
         socket.id = userId;
         next();
     } else {

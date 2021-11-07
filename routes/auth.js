@@ -11,7 +11,7 @@ authRouter.post('/register', base64DecodeMiddleware, registerValidation(), valid
     const register = await req.body.authService.register({username: req.body.username, password: req.body.password});
     if(register.status){
         const token = req.body.jwtService.generateJWT({userId: register.message.id});
-        res.cookie('token', token,  {httpOnly: true, sameSite: true, secure: true, domain: process.env.DOMAIN})
+        res.cookie('e2etoken', token,  {httpOnly: true, sameSite: true, secure: true, domain: process.env.DOMAIN})
         return res.status(200).json({'message': 'User created'});
     }
     return res.status(400).json(register)
@@ -21,7 +21,7 @@ authRouter.post('/login', base64DecodeMiddleware, loginValidation(), validatorMi
     const login = await req.body.authService.login({username: req.body.username, password: req.body.password});
     if(login.status){
         const token = req.body.jwtService.generateJWT({userId: login.message.id});     
-        res.cookie('token', token,  {httpOnly: true, sameSite: true, secure: true, domain: process.env.DOMAIN})          
+        res.cookie('e2etoken', token,  {httpOnly: true, sameSite: true, secure: true, domain: process.env.DOMAIN})          
         return res.status(200).json({'message': 'Sign in successful'});
     }
     return res.status(400).json(login);
@@ -33,7 +33,7 @@ authRouter.get('/verify', jwtMiddleware,  (req, res) => {
 
 authRouter.get('/logout', async (req, res) => {
     req.logout();
-    res.clearCookie('token', {domain: process.env.DOMAIN})
+    res.clearCookie('e2etoken', {domain: process.env.DOMAIN})
     res.status(200).json({message: 'logged out'});
 })
 
@@ -43,6 +43,6 @@ authRouter.get('/google', passport.authenticate('google', {
 
 authRouter.get('/google/redirect', passport.authenticate('google'), (req, res) => {
     const token = req.body.jwtService.generateJWT({userId: req.user.userId, username: req.user.username});    
-    res.cookie('token', token, {httpOnly: true, sameSite: true, secure: true, domain: process.env.DOMAIN})          
+    res.cookie('e2etoken', token, {httpOnly: true, sameSite: true, secure: true, domain: process.env.DOMAIN})          
     return res.status(200).redirect(process.env.CLIENT_HOST)
 })

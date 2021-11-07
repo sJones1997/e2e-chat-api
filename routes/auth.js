@@ -34,7 +34,7 @@ authRouter.get('/verify', jwtMiddleware,  (req, res) => {
 
 authRouter.get('/logout', async (req, res) => {
     req.logout();
-    res.clearCookie('token', {domain: process.env.DOMAIN}).end()
+    res.clearCookie('token', {domain: process.env.DOMAIN})
     res.status(200).json({message: 'logged out'});
 })
 

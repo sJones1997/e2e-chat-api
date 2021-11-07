@@ -21,7 +21,6 @@ class MessageService {
     }
 
     async getRoomMessages(roomId, userId){
-        console.log("ROOM MESSAGE")
         return await MessageModel.findAll({
             attributes: ['message', 'room_id', ['user_id', 'local_user'], 'user.username', 'user.gu.profile_name', 'created_at'],
             include: {

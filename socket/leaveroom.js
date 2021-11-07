@@ -8,7 +8,6 @@ module.exports = (io, socket) => {
         } else {
             username = getUser.message.username;                            
         }
-        console.log(username)
         socket.leave(roomName);
         socket.to(roomName).emit("user-left", true, username);        
     })

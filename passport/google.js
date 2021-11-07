@@ -26,7 +26,6 @@ passport.use(new GoogleStrategy({
             }
             return {'message': 'Problem creating user', 'status': 0}
         }
-        console.log(googleUser)
         done(null, googleUser);
     })
 )

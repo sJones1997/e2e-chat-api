@@ -4,7 +4,6 @@ const jwtMiddleware = (req, res, next) => {
     const jwtSerivce = new JwtService();
     const {token} = req.cookies
     const verify = jwtSerivce.verifyJWT(token);
-    console.log(verify)
     if(verify){
         req.body.userId = verify.userId
         next();

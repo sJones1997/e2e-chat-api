@@ -103,7 +103,6 @@ class RoomService {
 
     async leaveRoomCheck(roomId){
         const roomCapacity = await this.getRoomCapacity(roomId);
-        console.log(roomCapacity);
         const capacity = roomCapacity.message.roomCapacity;
         if(capacity > 1){
             return {"message": "Leaving room", "status": 1};

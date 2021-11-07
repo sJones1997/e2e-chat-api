@@ -32,14 +32,18 @@ const socketServicesMiddleware = require('./middlewares/socketServicesMiddleware
 io.use(socketAuthMiddleware)
 io.use(socketServicesMiddleware);
 
-io.on("connection", (socket) => {     
+io.on("connection", (socket) => { 
+    console.log("connection")
     require('./socket/moverooms')(io, socket);
     require('./socket/messages')(io,socket);  
     require('./socket/search')(io, socket);
     require('./socket/joinroom')(io, socket);
     require('./socket/leaveroom')(io, socket);
+    socket.on("disconnect", () => {
+        console.log("disconnected");
+    })
+    
 })
-
 const indexRouter = require('./routes/index');
 app.use('/api', indexRouter);
 

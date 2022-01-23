@@ -107,7 +107,7 @@ class RoomService {
         if(capacity > 1){
             return {"message": "Leaving room", "status": 1};
         }
-        return {'message': "You're the last member in the team, if you leave the room and it's chat history will be permanently deleted.", "status": 0}
+        return {'message': "You're the last member in the room, if you leave the room it will be deleted, along with it's chat history.", "status": 0}
 
     }
 
